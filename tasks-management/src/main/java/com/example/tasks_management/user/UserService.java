@@ -21,6 +21,9 @@ public class UserService {
     @Autowired
     private PasswordConfig passwordConfig;
 
+    @Autowired
+    private AuthenticatedUser authenticatedUser;
+
 
     @Transactional
     public UserEntity createUser(UserCreateDTO dto){
@@ -38,7 +41,7 @@ public class UserService {
     }
 
     public UserEntity getLoggedUser(){
-        return AuthenticatedUser.getAuthenticatedUser();
+        return authenticatedUser.getAuthenticatedUser();
     }
 
     public List<UserEntity> listAllUsers(){
@@ -75,6 +78,6 @@ public class UserService {
         user.setEmail(dto.getEmail());
         user.setPassword(passwordConfig.encryptPassword(dto.getPassword()));
         
-        return user;
+        return userRepository.save(user);
     }
 }

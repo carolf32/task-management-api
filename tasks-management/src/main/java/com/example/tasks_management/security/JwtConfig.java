@@ -3,13 +3,13 @@ package com.example.tasks_management.security;
 import java.security.Key;
 import java.util.Date;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
-@Service
+@Component
 public class JwtConfig {
 
     private static final long EXPIRATION_TIME = 86400000;

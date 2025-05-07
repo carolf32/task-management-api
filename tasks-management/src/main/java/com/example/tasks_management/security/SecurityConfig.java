@@ -6,25 +6,24 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.example.tasks_management.user.UserRepository;
+
 @Configuration
 public class SecurityConfig {
-
-   private final SecurityFilter securityFilter;
-
-   public SecurityConfig(SecurityFilter securityFilter){
-      this.securityFilter=securityFilter;
-   }
     
 @Bean
-   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-    http.csrf().disable()
-    .authorizeHttpRequests()
-    .requestMatchers("/auth/**")
-    .permitAll()
-    .anyRequest().authenticated()
-    .and()
-    .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
+   public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtConfig jwtConfig, UserRepository userRepository) throws Exception{
 
-    return http.build();
+      SecurityFilter securityFilter = new SecurityFilter(jwtConfig, userRepository);
+
+      http.csrf().disable()
+      .authorizeHttpRequests()
+      .requestMatchers("/auth/**", "/users")
+      .permitAll()
+      .anyRequest().authenticated()
+      .and()
+      .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
+
+      return http.build();
    }
 }

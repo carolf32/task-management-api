@@ -22,9 +22,12 @@ public class TaskService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private AuthenticatedUser authenticatedUser;
+
     @Transactional
     public TaskEntity createTask(TaskCreateDTO dto){
-        UserEntity loggedUser = AuthenticatedUser.getAuthenticatedUser();
+        UserEntity loggedUser = authenticatedUser.getAuthenticatedUser();
 
         TaskEntity task = TaskEntity.builder()
         .task(dto.getTask())
@@ -46,7 +49,7 @@ public class TaskService {
     }
 
     public List<TaskEntity> getTasksByUserId(){
-        UserEntity loggedUser = AuthenticatedUser.getAuthenticatedUser();
+        UserEntity loggedUser = authenticatedUser.getAuthenticatedUser();
 
         return taskRepository.findByUser(loggedUser);
     }
@@ -72,7 +75,7 @@ public class TaskService {
 
     public void deleteTask(Long id){
         if(!taskRepository.existsById(id)){
-            throw new NotFoundException("Task was not found");
+            throw new NotFoundException("Task not found");
         }
 
         taskRepository.deleteTask(id);
